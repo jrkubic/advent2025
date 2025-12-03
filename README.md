@@ -1,0 +1,1 @@
+Advent of code landing spot for 2025
