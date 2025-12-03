@@ -53,7 +53,6 @@ test_data_pt2 = [
 def DayThreePartTwo(numRange):
     resultVal = []
     droppedAmount = len(numRange) - 12
-    currMax = 0
     for i in numRange:
         while droppedAmount > 0 and resultVal and i > resultVal[-1]:
             resultVal.pop()
@@ -62,18 +61,7 @@ def DayThreePartTwo(numRange):
 
     result = "".join(resultVal[:12])
     return int(result)
-            # if (numRange[i] < numRange[i + 1]):
-                 
-        # for j in range(i + 1, len(numRange)):          
-        #     number = int(numRange[i] + numRange[j])
-        #     # print(number)
-        #     if number > currMax:
-        #         currMax = number
-                # resultVal = resultVal + str(currMax)
-    # print("result:", str(resultVal))
-    # print("currMax:", currMax)
-    # result = int(numRange) - int(currMax)
-    # return result
+
 
 # Part one, happy with myself. Could've done better and faster
 def DayThree(numRange):
@@ -96,8 +84,6 @@ if __name__ == '__main__':
     with open(path.join(path.dirname(__file__), "input.txt")) as f:  
         result = 0
         for line in f:
-#             # print("Line", line)
             result += DayThreePartTwo(str(line.strip()))
-            # result += result
             print(result)
         
