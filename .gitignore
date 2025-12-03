@@ -1,11 +1,11 @@
 # Inputs
-*.txt
+**.txt
 
-__pycache__/
-*.pyc
-*.pyd
-*.pyo
-*.egg-info/
+**/__pycache__/
+**.pyc
+**.pyd
+**.pyo
+**.egg-info/
 .pytest_cache/
 
 # Distributions
