@@ -7,71 +7,114 @@ import pytest
 
 
 # Sample Value, Expected Value
+test_input = """..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.""".strip().splitlines()
+
+test_expected = 13
+
 test_data = [
-    ("11-22", 2),   
-    ("95-115", 1),    
-    ("998-1012", 1),    
-    ("1188511880-1188511890", 1),  
-    ("222220-222224",      1), 
-    ("1698522-1698528",   0),   
-    ("446443-446449",   1),   
-    ("38593856-38593862",   1),   
+    (test_input, test_expected)
 ]
 
-test_data_pt2 = [
-    ("11-22", 2),   
-    ("95-115", 2),    
-    ("998-1012", 2),    
-    ("1188511880-1188511890", 1),  
-    ("222220-222224",      1), 
-    ("1698522-1698528",   0),   
-    ("446443-446449",   1),   
-    ("565653-565659",   1),   
-    ("824824821-824824827",   1),   
-    ("2121212118-2121212124",   1),   
-]
+def partFour(numRange):
+    currMax = 0
+    totalX = 0
 
-def PartFour(numRange):
-    # invalidCount = 0
-    # validCount = 0
-    # start = int(numRange.split("-")[0])
-    # end = int(numRange.split("-")[1])
-    # for i in range(start, end+1):
-    #     print(i)
-    #     if (bool(re.compile(r'^(.+)\1+$').fullmatch(str(i)))):
-    #         print("INVALID")
-    #         invalidCount += 1
-    #     else:
-    #         print("VALID")
-    #         validCount += 1
-    # print("invalidCount: ", invalidCount)
-    # return invalidCount
-    ...
+    ogMatrix = [row[:] for row in numRange]
 
+    for i in range(len(list(numRange))):
+        for j in range(len(list(numRange[0]))):
+            if (ogMatrix[i][j] == '@'):
+                rollCounter = 0
+                
+                for dy in range(-1, 2):
+                    for dx in range(-1, 2):
+                        if dy == 0 and dx == 0:
+                            continue
 
+                        ni, nj = i + dy, j + dx
+               
+                        if 0 <= ni < len(numRange) and 0 <= nj < len(numRange[0]):
+                            neighbor = ogMatrix[ni][nj]
+                            
+                            if neighbor == '@':
+                                rollCounter += 1
+
+                if rollCounter < 4:
+                    numRange[i][j] = 'X'
+                    totalX += 1
+            elif (ogMatrix[i][j] == 'X'):
+                numRange[i][j] = '.'
+                # totalX -= 1
+
+                # removedCounter = 0
+            
+                # for dy in range(-1, 2):
+                #     for dx in range(-1, 2):
+                #         if dy == 0 and dx == 0:
+                #             continue
+
+                #         ni, nj = i + dy, j + dx
+               
+                #         if 0 <= ni < len(numRange) and 0 <= nj < len(numRange[0]):
+                #             neighbor = ogMatrix[ni][nj]
+                           
+                #             if neighbor == '@' or neighbor == 'X':
+                #                 removedCounter += 1
+                           
+                # if removedCounter < 4:
+                    # totalX += 1
+    return numRange, totalX
+
+        # if counter < 4:
+        #     numRange[i][j] = "X"
+        #     # print(numRange[i][j+1])
+        #     # print(numRange[i-1][j], numRange[i][j], numRange[i+1][j])
+        #     # print(numRange[i][j-1], numRange[i][j-1],numRange[i][j])
+        #     totalX += 1
+        #     counter = 0
+
+            # if (i[j - 1]).contains("@"):
+            #     print("j: ", j)      
+            # if (i[j + 1]).contains("@"):
+            #     print("j: ", j)      
+                # number = int(numRange[i] + numRange[j])
+                # if number > currMax:
+                #     currMax = number
+    # print(currMax)
+    # return currMax
 
 if __name__ == '__main__':
     invalidCount = 0
-    validCount = 0
+    validCount = 1
+    cycleCount = 0
+    total = 0
+    result = []
     with open(path.join(path.dirname(__file__), "input.txt")) as f:
-        ...
-        # for instruction in f:                
-        #     ListSplitByCommas = instruction.split(",")
-        #     for numRange in ListSplitByCommas:
-        #         start = int(numRange.split("-")[0])
-        #         end = int(numRange.split("-")[1])
-        #         for i in range(start, end + 1):
-        #             if (bool(re.compile(r'^(.+)\1+$').fullmatch(str(i)))):
-        #                 invalidCount += i
-        #             else:
-        #                 validCount += 1
+        for row in f:   
+            result.append([str(x) for x in row.strip()])
+    while validCount != 0:
+        result, validCount = partFour(result)
+        cycleCount += 1
+        total += validCount
+        # print("result :", result)
+        print("optimalRollsRemoved :", validCount)
+    print("cycleCount :", cycleCount)
+    print("Total :", total)
 
-    # print(invalidCount)
-        
-
-
-# @pytest.mark.parametrize("range, expected", test_data_pt2)
+# @pytest.mark.parametrize("range, expected", test_data)
 # def test_repeating_groups(range, expected):
-#     result = PartOne(range)
-#     # print(result)
+#     data = []
+#     for row in range:
+#         data.append([str(x) for x in row]) 
+#     # print(data)
+#     result = partFour(data)
 #     assert result == expected, f"Failed on {range}"
