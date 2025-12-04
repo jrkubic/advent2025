@@ -1,5 +1,4 @@
 
-#Very happy with today, only help needed was on regex bc I don't got it like that.
 from os import path
 import sys
 import re
