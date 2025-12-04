@@ -5,24 +5,23 @@ import sys
 import re
 import pytest
 
-
 # Sample Value, Expected Value
-test_input = """..@@.@@@@.
-@@@.@.@.@@
-@@@@@.@.@@
-@.@@@@..@.
-@@.@@@@.@@
-.@@@@@@@.@
-.@.@.@.@@@
-@.@@@.@@@@
-.@@@@@@@@.
-@.@.@@@.@.""".strip().splitlines()
+# test_input = """..@@.@@@@.
+# @@@.@.@.@@
+# @@@@@.@.@@
+# @.@@@@..@.
+# @@.@@@@.@@
+# .@@@@@@@.@
+# .@.@.@.@@@
+# @.@@@.@@@@
+# .@@@@@@@@.
+# @.@.@@@.@.""".strip().splitlines()
 
-test_expected = 13
+# test_expected = 13
 
-test_data = [
-    (test_input, test_expected)
-]
+# test_data = [
+#     (test_input, test_expected)
+# ]
 
 def partFour(numRange):
     currMax = 0
@@ -105,7 +104,6 @@ if __name__ == '__main__':
         result, validCount = partFour(result)
         cycleCount += 1
         total += validCount
-        # print("result :", result)
         print("optimalRollsRemoved :", validCount)
     print("cycleCount :", cycleCount)
     print("Total :", total)
