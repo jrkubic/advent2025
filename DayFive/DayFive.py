@@ -66,7 +66,7 @@ import pandas as pd
 
 BATCH_SIZE = 10_000_000
 
-def partFourAddFreshID (numRange, freshArray, idList) :
+def partFourAddFreshID (numRange, freshArray, idList):
     resultArray = []
     # print("In partFourAddFreshID...")
     for row in numRange:
@@ -81,45 +81,45 @@ def partFourAddFreshID (numRange, freshArray, idList) :
     # print("ResultArray", resultArray)
     return resultArray
 
-def partFourPartTwo (numRange) :
-    resultAmount = 0
-    freshValues = []
+def partFourPartTwo (numRange):
     # print("In partFourAddFreshID...")
-    #new strat, lets be smart
+
+    # new strat, lets be smart
     df = pd.DataFrame(numRange, columns=['range_str'])
     quickSplitRanges = df['range_str'].str.split('-', expand=True).astype(np.int64)
+
     # print("quickSplitRanges[0].values: ", quickSplitRanges[0].values)
     # print(quickSplitRanges[0])
     allStarts = quickSplitRanges[0].values
     allEnds = quickSplitRanges[1].values + 1
 
-    sort_idxs = np.argsort(allStarts)
+    sortIds = np.argsort(allStarts)
 
-    merged_starts = []
-    merged_ends = []
+    mergedStarts = []
+    mergedEnds = []
 
-    sortedStarts = allStarts[sort_idxs]
-    sortedEnds = allEnds[sort_idxs]
+    sortedStarts = allStarts[sortIds]
+    sortedEnds = allEnds[sortIds]
     if len(sortedStarts) > 0:
         curr_s = sortedStarts[0]
         curr_e = sortedEnds[0]
         for i in range(1, len(sortedStarts)):
-                next_s = sortedStarts[i]
-                next_e = sortedEnds[i]
+                nextS = sortedStarts[i]
+                nextE = sortedEnds[i]
 
-                if next_s < curr_e: 
-                    curr_e = max(curr_e, next_e)
+                if nextS < curr_e: 
+                    curr_e = max(curr_e, nextE)
                 else:
-                    merged_starts.append(curr_s)
-                    merged_ends.append(curr_e)
-                    curr_s = next_s
-                    curr_e = next_e
+                    mergedStarts.append(curr_s)
+                    mergedEnds.append(curr_e)
+                    curr_s = nextS
+                    curr_e = nextE
                     
-        merged_starts.append(curr_s)
-        merged_ends.append(curr_e)
+        mergedStarts.append(curr_s)
+        mergedEnds.append(curr_e)
 
-        total_count = np.sum(np.array(merged_ends) - np.array(merged_starts))
-    return total_count
+        totalCount = np.sum(np.array(mergedEnds) - np.array(mergedStarts))
+    return totalCount
     # print(sort_idxs)
     # for starts, ends in zip(allStarts, allEnds):
     #     # pandas and  numpy wasnt enough on their own. Trying batch size cap.
