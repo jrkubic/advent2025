@@ -54,66 +54,138 @@
 # Start with your original diagram. How many rolls of paper in total can be removed by the Elves and their forklifts?
 
 # Your puzzle answer was 8690.
+
 from os import path
 import sys
+# print(sys.maxsize)
 import re
 import pytest
+import numpy as np
+import pandas as pd
 
 
-# Sample Value, Expected Value
-# test_input = """..@@.@@@@.
-# @@@.@.@.@@
-# @@@@@.@.@@
-# @.@@@@..@.
-# @@.@@@@.@@
-# .@@@@@@@.@
-# .@.@.@.@@@
-# @.@@@.@@@@
-# .@@@@@@@@.
-# @.@.@@@.@.""".strip().splitlines()
+BATCH_SIZE = 10_000_000
 
+def partFourAddFreshID (numRange, freshArray, idList) :
+    resultArray = []
+    # print("In partFourAddFreshID...")
+    for row in numRange:
+        start = int(row.split("-")[0])
+        end = int(row.split("-")[1])
+        for id in idList:
+            if int(id) >= start and int(id) <= end and int(id) not in resultArray:
+                # print("FRESH", id)
+                resultArray.append(int(id))
+        # for i in range(start, end+1):
+        #     resultArray.append(i)
+    # print("ResultArray", resultArray)
+    return resultArray
 
-# test_expected = 13
+def partFourPartTwo (numRange) :
+    resultAmount = 0
+    freshValues = []
+    # print("In partFourAddFreshID...")
+    #new strat, lets be smart
+    df = pd.DataFrame(numRange, columns=['range_str'])
+    quickSplitRanges = df['range_str'].str.split('-', expand=True).astype(np.int64)
+    # print("quickSplitRanges[0].values: ", quickSplitRanges[0].values)
+    # print(quickSplitRanges[0])
+    allStarts = quickSplitRanges[0].values
+    allEnds = quickSplitRanges[1].values + 1
 
+    sort_idxs = np.argsort(allStarts)
 
-# test_data = [
-#     (test_input, test_expected)
-# ]
+    merged_starts = []
+    merged_ends = []
 
-def partFour(numRange):
-    currMax = 0
-    totalX = 0
+    sortedStarts = allStarts[sort_idxs]
+    sortedEnds = allEnds[sort_idxs]
+    if len(sortedStarts) > 0:
+        curr_s = sortedStarts[0]
+        curr_e = sortedEnds[0]
+        for i in range(1, len(sortedStarts)):
+                next_s = sortedStarts[i]
+                next_e = sortedEnds[i]
 
-    ogMatrix = [row[:] for row in numRange]
+                if next_s < curr_e: 
+                    curr_e = max(curr_e, next_e)
+                else:
+                    merged_starts.append(curr_s)
+                    merged_ends.append(curr_e)
+                    curr_s = next_s
+                    curr_e = next_e
+                    
+        merged_starts.append(curr_s)
+        merged_ends.append(curr_e)
 
-    for i in range(len(list(numRange))):
-        for j in range(len(list(numRange[0]))):
-           ...
+        total_count = np.sum(np.array(merged_ends) - np.array(merged_starts))
+    return total_count
+    # print(sort_idxs)
+    # for starts, ends in zip(allStarts, allEnds):
+    #     # pandas and  numpy wasnt enough on their own. Trying batch size cap.
+    #     for batch_s in range(starts, ends, BATCH_SIZE):
+    #         batch_e = min(batch_s + BATCH_SIZE, ends)
 
-    return numRange, totalX
+    #         chunk = np.arange(batch_s, batch_e)            
+    #         return list(set(chunk))
+
+    # for row in numRange:
+    #     start = int(row.split("-")[0])
+    #     end = int(row.split("-")[1])
+    #     difference = int(end) - int(start)
+    #     # if (range(start, end)):
+    #         # if range(start, end) in freshValues:
+    #     # freshValues.extend(range(start, end + 1))
+    #     np.array(freshValues)
+        
+    #     for x in range(start, end + 1):
+    #         ...
+            #  freshValues.append(x)
+        # for id in idList:
+        # for i in difference:
+        #     count += 1
+        # resultAmount += (difference + 1)
+    # list(set(freshValues))
+    # print(len((freshValues)))
+    # print(len(list(set(freshValues))))
+
+    # return len(list(set(freshValues)))
+        # while start != end:
+        #     if start not in resultArray:
+        #         print("FRESH ", start)
+        #         resultArray.append(start)
+        #     start += 1
+        
+        # if int(id) not in resultArray:
+        #     print("FRESH", id)
+        #     resultArray.append(int(id))
+    # return resultArray
+
+def partFourRanges(numRange):
+    # print("In partFourRanges...")
+
+    freshFruitRange = []
+    for row in numRange:
+        if "-" in row:
+            freshFruitRange.append(row)
+    return freshFruitRange
+
+def partFourIds(numRange):
+    # print("In partFourIds...")
+    freshFruitIds = []
+    for row in numRange:
+        if "-" not in row and row:
+            freshFruitIds.append(row)
+    return freshFruitIds
 
 if __name__ == '__main__':
-    validCount = 1
-    cycleCount = 0
-    total = 0
-    result = []
+    data = []
+    ranges = []
+    ids = []
     with open(path.join(path.dirname(__file__), "input.txt")) as f:
-        for row in f:   
-            result.append([str(x) for x in row.strip()])
-    while validCount != 0:
-        result, validCount = partFour(result)
-        cycleCount += 1
-        total += validCount
-        print("optimalRollsRemoved :", validCount)
-    print("cycleCount :", cycleCount)
-    print("Total :", total)
-
-
-# @pytest.mark.parametrize("range, expected", test_data)
-# def test_repeating_groups(range, expected):
-#     data = []
-#     for row in range:
-#         data.append([str(x) for x in row]) 
-#     # print(data)
-#     result = partFour(data)
-#     assert result == expected, f"Failed on {range}"
+        for row in f:
+            data.append(str(row).strip()) 
+    ranges = partFourRanges(data)
+    
+    difference = partFourPartTwo(ranges)
+    print(difference)
