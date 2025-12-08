@@ -10,28 +10,11 @@
 
 # The database operates on ingredient IDs. It consists of a list of fresh ingredient ID ranges, a blank line, and a list of available ingredient IDs. For example:
 
-# 3-5
-# 10-14
-# 16-20
-# 12-18
 
-# 1
-# 5
-# 8
-# 11
-# 17
-# 32
 
 # The fresh ID ranges are inclusive: the range 3-5 means that ingredient IDs 3, 4, and 5 are all fresh. The ranges can also overlap; an ingredient ID is fresh if it is in any range.
 
 # The Elves are trying to determine which of the available ingredient IDs are fresh. In this example, this is done as follows:
-
-#     Ingredient ID 1 is spoiled because it does not fall into any range.
-#     Ingredient ID 5 is fresh because it falls into range 3-5.
-#     Ingredient ID 8 is spoiled.
-#     Ingredient ID 11 is fresh because it falls into range 10-14.
-#     Ingredient ID 17 is fresh because it falls into range 16-20 as well as range 12-18.
-#     Ingredient ID 32 is spoiled.
 
 # So, in this example, 3 of the available ingredient IDs are fresh.
 
@@ -46,10 +29,6 @@
 
 # Now, the second section of the database (the available ingredient IDs) is irrelevant. Here are the fresh ingredient ID ranges from the above example:
 
-# 3-5
-# 10-14
-# 16-20
-# 12-18
 
 # The ingredient IDs that these ranges consider to be fresh are 3, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, and 20. So, in this example, the fresh ingredient ID ranges consider a total of 14 ingredient IDs to be fresh.
 
@@ -80,22 +59,15 @@ def partFourAddFreshID (numRange, freshArray, idList):
         end = int(row.split("-")[1])
         for id in idList:
             if int(id) >= start and int(id) <= end and int(id) not in resultArray:
-                # print("FRESH", id)
                 resultArray.append(int(id))
-        # for i in range(start, end+1):
-        #     resultArray.append(i)
-    # print("ResultArray", resultArray)
     return resultArray
 
 def partFourPartTwo (numRange):
-    # print("In partFourAddFreshID...")
 
     # new strat, lets be smart
     df = pd.DataFrame(numRange, columns=['range_str'])
     quickSplitRanges = df['range_str'].str.split('-', expand=True).astype(np.int64)
 
-    # print("quickSplitRanges[0].values: ", quickSplitRanges[0].values)
-    # print(quickSplitRanges[0])
     allStarts = quickSplitRanges[0].values
     allEnds = quickSplitRanges[1].values + 1
 
@@ -126,49 +98,8 @@ def partFourPartTwo (numRange):
 
         totalCount = np.sum(np.array(mergedEnds) - np.array(mergedStarts))
     return totalCount
-    # print(sort_idxs)
-    # for starts, ends in zip(allStarts, allEnds):
-    #     # pandas and  numpy wasnt enough on their own. Trying batch size cap.
-    #     for batch_s in range(starts, ends, BATCH_SIZE):
-    #         batch_e = min(batch_s + BATCH_SIZE, ends)
-
-    #         chunk = np.arange(batch_s, batch_e)            
-    #         return list(set(chunk))
-
-    # for row in numRange:
-    #     start = int(row.split("-")[0])
-    #     end = int(row.split("-")[1])
-    #     difference = int(end) - int(start)
-    #     # if (range(start, end)):
-    #         # if range(start, end) in freshValues:
-    #     # freshValues.extend(range(start, end + 1))
-    #     np.array(freshValues)
-        
-    #     for x in range(start, end + 1):
-    #         ...
-            #  freshValues.append(x)
-        # for id in idList:
-        # for i in difference:
-        #     count += 1
-        # resultAmount += (difference + 1)
-    # list(set(freshValues))
-    # print(len((freshValues)))
-    # print(len(list(set(freshValues))))
-
-    # return len(list(set(freshValues)))
-        # while start != end:
-        #     if start not in resultArray:
-        #         print("FRESH ", start)
-        #         resultArray.append(start)
-        #     start += 1
-        
-        # if int(id) not in resultArray:
-        #     print("FRESH", id)
-        #     resultArray.append(int(id))
-    # return resultArray
-
+   
 def partFourRanges(numRange):
-    # print("In partFourRanges...")
 
     freshFruitRange = []
     for row in numRange:
@@ -177,7 +108,6 @@ def partFourRanges(numRange):
     return freshFruitRange
 
 def partFourIds(numRange):
-    # print("In partFourIds...")
     freshFruitIds = []
     for row in numRange:
         if "-" not in row and row:
